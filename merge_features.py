@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import numpy as np
 
 # ============================== CONFIGURATION ===============================
 input_data_dir = 'data'
@@ -52,5 +53,6 @@ if do_join_patients_and_weather:
     patients_and_weather_df = patients_df.merge(daily_weather_df, how='left',
                                                 left_on=['Assess_date_No_Time'],
                                                 right_on=['day_local'])
+    print("Number of records with missing weather data: ", np.sum(patients_and_weather_df['day_local'].apply(lambda i: np.isnan(i.day))))
     patients_and_weather_df.to_csv(generated_data_dir + os.path.sep + patients_and_weather_data_file)
 
