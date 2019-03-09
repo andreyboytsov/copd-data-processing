@@ -1,5 +1,4 @@
 import pandas as pd
-from datetime import datetime
 
 # Read the csv files
 weather_df = pd.read_csv("weather_data.csv")
@@ -11,41 +10,49 @@ weather_df['dt_weather'] = weather_df['dt'].apply(lambda i: pd.Timestamp(i, unit
 weather_df['weather_only_date'] = [d.date() for d in weather_df['dt_weather']]
 weather_df['weather_only_time'] = [d.time() for d in weather_df['dt_weather']]
 
-#weather_df['weather_only_date'] = [str(d.date()) for d in weather_df['dt_weather']]
-#weather_df['weather_only_time'] = [str(d.time()) for d in weather_df['dt_weather']]
-
 # Find the patient date and time and save them separately
 
 patients_df['patients_only_date'] = patients_df['Assess_Date_With_Time'].apply(lambda i: i.split()[0])
 patients_df['patients_only_time'] = patients_df['Assess_Date_With_Time'].apply(lambda i: i.split()[1])
 
+# Find the weather date and time and save them separately
 patients_df['patients_only_date'] = pd.to_datetime(patients_df['patients_only_date']).apply(lambda i: i.date())
 patients_df['patients_only_time'] = pd.to_datetime(patients_df['patients_only_time']).apply(lambda i: i.time())
 
 
 #patients_df['patients_only_date'] = patients_df['Assess_Date_With_Time'].apply(lambda i: datetime.strptime(i.split()[0],'%Y-%m-%d'))
 
+### Merge the file to create a csv with the headers combined
+patients_and_weather_df = patients_df.merge(weather_df, how='left', left_on=['patients_only_date'], right_on=['weather_only_date'])
 
-#######################################################################################
-## Now the data is saved in 2 dataframes that has the date and time sparated as strings
-#######################################################################################
+### delete all rows in the dataframe and keep only the header so we can append later
+#patients_and_weather_final = patients_and_weather_df.iloc[0:0]
+patients_and_weather_df.to_csv("Patients_and_Weather.csv")
 
-weather_df.to_csv("Weather_DateTime_Separated.csv")
-patients_df.to_csv("Patients__DateTime_Separated.csv")
+for index, row in patients_and_weather_df.iterrows():
+    #print(index, row['Region'])
+    if (row['patients_only_date'] == row['weather_only_date']) and (row['patients_only_time'] > row['weather_only_time']):
+        continue
+
+        #patients_and_weather_df.drop([index],axis = 0, inplace = True)
+    print(index)
+#patients_and_weather_df = patients_and_weather_df.groupby('patients_only_date')
 
 
-#weather_df.sort_values(['weather_only_date', 'weather_only_time'], ascending=[True, True])
-#patients_df.sort_values(['patients_only_date'], ascending=[True])
+
+
+
 
 
 #print(patients_df[['patients_only_date','patients_only_time']])
-print(patients_df['patients_only_time'][1])
-print(weather_df['weather_only_time'][1])
+#print(patients_df['patients_only_time'][1])
+#print(weather_df['weather_only_time'][1])
 
-print(patients_df['patients_only_date'][1])
-print(weather_df['weather_only_date'][1])
+#print(patients_df['patients_only_date'][1])
+#print(weather_df['weather_only_date'][1])
 
-#if patients_df['patients_only_time'][1]> weather_df['weather_only_time'][1]:
- #   print("after")
-#else:
-  #  print("before")
+#print(patients_and_weather_df['patients_only_date'][1])
+#print(patients_and_weather_df['patients_only_date'][2])
+
+
+
