@@ -39,7 +39,7 @@ pawdf_grouped = patients_and_weather_df.groupby(by=["Merida ID", "Assess_Date_Wi
 
 def select_lowest_time_diff(x):
     index = np.where(x["time_difference"] == x["time_difference"].min())[0][0]
-    return x.iloc[index:index+1, :]
+    return x.iloc[index, :]
 
 patients_and_weather_df = pawdf_grouped.apply(select_lowest_time_diff)
 
