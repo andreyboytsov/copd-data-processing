@@ -15,11 +15,36 @@ all_data$snow_1h[is.na(all_data$snow_1h)] <- 0
 all_data$rain_1h[is.na(all_data$rain_1h)] <- 0
 all_data$snow_3h[is.na(all_data$snow_3h)] <- 0
 all_data$rain_3h[is.na(all_data$rain_3h)] <- 0
-all_data$snow_24h[is.na(all_data$snow_24h)] <- 0
-all_data$rain_24h[is.na(all_data$rain_24h)] <- 0
+#all_data$snow_24h[is.na(all_data$snow_24h)] <- 0
+#all_data$rain_24h[is.na(all_data$rain_24h)] <- 0
 
 # + snow_24h + rain_24h
+
+all_data$manual_Triage_factor <- as.factor(all_data$manual_Triage)
 
 all_data.aov <- aov(manual_Triage ~ temp + pressure + humidity + wind_speed + snow_1h + snow_3h  + clouds_all
                     + wind_deg + rain_1h + rain_3h + weather_main + weather_description, data = all_data, na.action=na.exclude)
 summary(all_data.aov)
+
+require(ggplot2)
+
+ggplot(all_data[!is.na(all_data$manual_Triage),], aes(x = manual_Triage, y = temp, group=manual_Triage)) +
+  geom_boxplot(fill = "grey80", colour = "blue") + scale_x_discrete()
+
+ggplot(all_data[!is.na(all_data$manual_Triage),], aes(x = manual_Triage, y = rain_3h, group=manual_Triage)) +
+  geom_boxplot(fill = "grey80", colour = "blue") + scale_x_discrete()
+
+
+all_data.lm <- lm(manual_Triage ~ temp + pressure + humidity + wind_speed + snow_1h + snow_3h+ clouds_all
+                  + wind_deg + rain_1h + rain_3h + weather_main + weather_description, data = all_data, na.action=na.exclude)
+summary(all_data.lm)
+
+
+all_data.man <- manova(temp + pressure + humidity + wind_speed + snow_1h + snow_3h+ clouds_all
+                  + wind_deg + rain_1h + rain_3h + weather_main + weather_description ~ manual_Triage, data = all_data, na.action=na.exclude)
+
+all_data.aov_reverse <- aov(temp ~ manual_Triage, data = all_data, na.action=na.exclude)
+summary(all_data.aov_reverse)
+
+all_data.aov_reverse_factor <- aov(temp ~ manual_Triage_factor, data = all_data, na.action=na.exclude)
+summary(all_data.aov_reverse_factor)
