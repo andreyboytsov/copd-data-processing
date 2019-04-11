@@ -48,3 +48,13 @@ summary(all_data.aov_reverse)
 
 all_data.aov_reverse_factor <- aov(temp ~ manual_Triage_factor, data = all_data, na.action=na.exclude)
 summary(all_data.aov_reverse_factor)
+
+
+plot(manual_Triage ~ temp, data=all_data)
+abline(lm(manual_Triage ~ temp, data = all_data))
+
+plot(temp ~ manual_Triage, data=all_data)
+
+ggplot(all_data[!is.na(all_data$manual_Triage),], aes(x=manual_Triage, y=temp)) + 
+  geom_point(color='#2980B9', size = 4) + 
+  geom_smooth(method=lm, color='#2C3E50')
