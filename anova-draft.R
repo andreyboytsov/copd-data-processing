@@ -71,3 +71,18 @@ library(corrplot)
 
 all_data.corr <- cor(all_data[c("temp","pressure","humidity","wind_speed","snow_3h","clouds_all","rain_3h")])
 corrplot(all_data.corr, method="circle")
+
+
+
+all_data.lmq <- lm(question_Triage ~ temp + pressure + humidity + wind_speed + snow_1h + snow_3h+ clouds_all
+                  + wind_deg + rain_1h + rain_3h + weather_main + weather_description, data = all_data, na.action=na.exclude)
+summary(all_data.lmq)
+
+
+all_data.lmp <- lm(pulse_Triage ~ temp + pressure + humidity + wind_speed + snow_1h + snow_3h+ clouds_all
+                   + wind_deg + rain_1h + rain_3h + weather_main + weather_description, data = all_data, na.action=na.exclude)
+summary(all_data.lmp)
+
+all_data.lms <- lm(spo2_Triage ~ temp + pressure + humidity + wind_speed + snow_1h + snow_3h+ clouds_all
+                   + wind_deg + rain_1h + rain_3h + weather_main + weather_description, data = all_data, na.action=na.exclude)
+summary(all_data.lms)
