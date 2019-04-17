@@ -26,9 +26,11 @@ all_data.aov <- aov(manual_Triage ~ temp + pressure + humidity + wind_speed + sn
                     + wind_deg + rain_1h + rain_3h + weather_main + weather_description, data = all_data, na.action=na.exclude)
 summary(all_data.aov)
 
+all_data$tempCelsius <- all_data$temp - 273.15
+
 require(ggplot2)
 
-ggplot(all_data[!is.na(all_data$manual_Triage),], aes(x = manual_Triage, y = temp, group=manual_Triage)) +
+ggplot(all_data[!is.na(all_data$manual_Triage),], aes(x = manual_Triage, y = tempCelsius, group=manual_Triage)) +
   geom_boxplot(fill = "grey80", colour = "blue") + scale_x_discrete()
 
 ggplot(all_data[!is.na(all_data$manual_Triage),], aes(x = manual_Triage, y = rain_3h, group=manual_Triage)) +
@@ -38,6 +40,10 @@ ggplot(all_data[!is.na(all_data$manual_Triage),], aes(x = manual_Triage, y = rai
 all_data.lm <- lm(manual_Triage ~ temp + pressure + humidity + wind_speed + snow_1h + snow_3h+ clouds_all
                   + wind_deg + rain_1h + rain_3h + weather_main + weather_description, data = all_data, na.action=na.exclude)
 summary(all_data.lm)
+
+all_data.lm2 <- lm(manual_Triage ~ temp + pressure + humidity + wind_speed + snow_3h+ clouds_all
+                  + rain_3h + weather_main, data = all_data, na.action=na.exclude)
+summary(all_data.lm2)
 
 
 all_data.man <- manova(temp + pressure + humidity + wind_speed + snow_1h + snow_3h+ clouds_all
@@ -55,6 +61,13 @@ abline(lm(manual_Triage ~ temp, data = all_data))
 
 plot(temp ~ manual_Triage, data=all_data)
 
-ggplot(all_data[!is.na(all_data$manual_Triage),], aes(x=manual_Triage, y=temp)) + 
+ggplot(all_data[!is.na(all_data$manual_Triage),], aes(x=manual_Triage, y=tempCelsius)) + 
   geom_point(color='#2980B9', size = 4) + 
   geom_smooth(method=lm, color='#2C3E50')
+
+# system('defaults write org.R-project.R force.LANG en_US.UTF-8')
+install.packages("corrplot")
+library(corrplot)
+
+all_data.corr <- cor(all_data[c("temp","pressure","humidity","wind_speed","snow_3h","clouds_all","rain_3h")])
+corrplot(all_data.corr, method="circle")

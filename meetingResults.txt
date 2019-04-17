@@ -1,0 +1,8 @@
+1. Combine red and orange (or use them as factors)
+2. See what combinations of parameters lead to red or orange.
+3. Association rules.
+Humidity < 10 & B & C -> Red
+4. NBayesian
+5. Anything explanable
+6. Drop red, see the difference between G and Y
+7. Merge R & Y, then check
