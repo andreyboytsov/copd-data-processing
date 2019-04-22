@@ -101,7 +101,7 @@ def backwardElimination(x, Y, sl, columns):
                     x = np.delete(x, j, 1)
                     columns = np.delete(columns, j)
                     
-    regressor_OLS.summary()
+    print regressor_OLS.summary()
     return x, columns
 
 #define confidence factor for P-Value
