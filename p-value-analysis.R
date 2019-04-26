@@ -52,7 +52,7 @@ spo2.hist <- lm(pulse_Triage ~ pulse_Triage_1 + pulse_Triage_2 + pulse_Triage_3 
 summary(spo2.hist)
 
 spo2.hist.weather <- lm(pulse_Triage ~ pulse_Triage_1 + pulse_Triage_2 + pulse_Triage_3 + pulse_Triage_4+
-                         temp + pressure + humidity + wind_speed,
+                         temp * pressure * humidity + wind_speed,
                        data = all_data, na.action=na.exclude)
 summary(spo2.hist.weather)
 
@@ -102,3 +102,8 @@ corrplot(quest.corr, method="circle")
 man.corr <- cor(all_data[c("manual_Triage_1","manual_Triage_2","manual_Triage_3",
                              "temp","pressure","humidity","wind_speed")], use = "pairwise.complete.obs")
 corrplot(man.corr, method="circle")
+
+
+
+
+# Temperature, pressure, humidity - everything.
