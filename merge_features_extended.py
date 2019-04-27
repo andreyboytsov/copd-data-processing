@@ -65,6 +65,7 @@ for index, row in patients_and_weather_df.iterrows():
             (row['Assess_Date_With_Time'] >= weather_df['dt_weather']) &
             ((row['Assess_Date_With_Time'] - weather_df['dt_weather']) <= datetime.timedelta(hours=h))]
         for c in weather_columns:
+            print(c, np.nanmean(weather_subselection[c]), type(np.nanmean(weather_subselection[c])))
             patients_and_weather_df.loc[index, c+"_avg"+str(h)+"h"] = np.nanmean(weather_subselection[c])
 #patients_and_weather_df.to_csv(fname)
 
@@ -84,7 +85,7 @@ for index, row in patients_and_weather_df.iterrows():
             ((row['Assess_date_No_Time'] - patients_and_weather_df['Assess_date_No_Time']) > datetime.timedelta(days=d-1))]
         #print("\t", len(subselection))
         for par in interesting_parameters:
-            patients_and_weather_df.loc[index, par+"_"+str(d)] = np.nanmean(subselection[par])
+            patients_and_weather_df.loc[index, par+"_"+str(d)] = np.nanmean(subselection[par].as_float())
 
 ### delete all rows in the dataframe and keep only the header so we can append later
 #patients_and_weather_final = patients_and_weather_df.iloc[0:0]
