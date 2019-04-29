@@ -65,7 +65,7 @@ for index, row in patients_and_weather_df.iterrows():
             (row['Assess_Date_With_Time'] >= weather_df['dt_weather']) &
             ((row['Assess_Date_With_Time'] - weather_df['dt_weather']) <= datetime.timedelta(hours=h))]
         for c in weather_columns:
-            print(c, np.nanmean(weather_subselection[c]), type(np.nanmean(weather_subselection[c])))
+            # print(c, np.nanmean(weather_subselection[c]), type(np.nanmean(weather_subselection[c])))
             patients_and_weather_df.loc[index, c+"_avg"+str(h)+"h"] = np.nanmean(weather_subselection[c])
 #patients_and_weather_df.to_csv(fname)
 
@@ -73,7 +73,7 @@ for index, row in patients_and_weather_df.iterrows():
 # =========================== STEP 3: Add history.
 print('==================== STEP 3 STARTED =====================================')
 interesting_parameters = ("pulse_Triage", "spo2_Triage", "question_Triage", "manual_Triage")
-num_days = 10
+num_days = 30
 for par in interesting_parameters:
     patients_and_weather_df[par + "_" + str(par)] = 0
 

@@ -9,8 +9,10 @@ from sklearn.metrics import accuracy_score
 # ============================== PARAMETERS  ==============================
 test_id_selection_random_seed = 0
 fraction_train_ids = 0.9
-max_days=7
-min_days=3
+# max_days = 7
+# min_days = 3
+max_days = 3
+min_days = 2
 # ============================== END PARAMETERS  ==========================
 
 interesting_columns_weather = ['temp', 'pressure','humidity']  # TODO wind_speed ?
@@ -256,6 +258,6 @@ if __name__=="__main__":
 
         results_df = pd.concat([results_df] + history_dfs, axis=0, sort=False)
 
-        results_df.to_csv("./data_generated/final_results.csv")
+        results_df.to_csv("./data_generated/final_results_3.csv")
 
     # TODO Collapse grid search
