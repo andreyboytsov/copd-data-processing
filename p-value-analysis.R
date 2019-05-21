@@ -1,3 +1,8 @@
+install.packages("mlogit")
+
+library(nnet)
+library(mlogit)
+
 # all_data = read.csv("./Basel/Patients_and_Weather_w_history.csv")
 all_data = read.csv("./data_generated/Patients_and_Weather_extended.csv")
 all_data$tempCelsius <- all_data$temp - 273.15
@@ -14,6 +19,403 @@ interesting_columns_weather = c("temp", "pressure",
                                 "rain_today", "snow_1h", "snow_3h", "snow_24h", "snow_today",
                                 "clouds_all")
 
+all_data$manual_Triage_1 = all_data$manual_Triage==1
+all_data$manual_Triage_3 = all_data$manual_Triage==3
+all_data$manual_Triage_5 = all_data$manual_Triage==5
+
+all_data$question_Triage_1 = all_data$question_Triage==1
+all_data$question_Triage_3 = all_data$question_Triage==3
+all_data$question_Triage_5 = all_data$question_Triage==5
+
+all_data$spo2_Triage_1 = all_data$spo2_Triage==1
+all_data$spo2_Triage_3 = all_data$spo2_Triage==3
+all_data$spo2_Triage_5 = all_data$spo2_Triage==5
+
+all_data$pulse_Triage_1 = all_data$pulse_Triage==1
+all_data$pulse_Triage_3 = all_data$pulse_Triage==3
+all_data$pulse_Triage_5 = all_data$pulse_Triage==5
+
+#sum.man.weather = summary(man.weather)
+#pt(abs(sum.man.weather$coefficients / sum.man.weather$standard.errors), df=nrow(all_data)-10, lower=FALSE) 
+
+
+# ================== LOGISTIC REGRESSION - Multinomial (mlogit package) =======================
+manual_data = mlogit.data(all_data,choice = 'manual_Triage', shape = "wide")
+question_data = mlogit.data(all_data,choice = 'question_Triage', shape = "wide")
+pulse_data = mlogit.data(all_data,choice = 'pulse_Triage', shape = "wide")
+spo2_data = mlogit.data(all_data,choice = 'spo2_Triage', shape = "wide")
+
+# ================== Will be used in the article - 0h ================================
+
+man.model <- mlogit(manual_Triage ~ 1 | temp + pressure + humidity, data = man_data)
+summary(man.model)
+
+quest.model <- mlogit(question_Triage ~ 1 | temp + pressure + humidity, data = question_data)
+summary(quest.model)
+
+pulse.model <- mlogit(pulse_Triage ~ 1 | temp + pressure + humidity, data = pulse_data)
+summary(pulse.model)
+
+spo2.model <- mlogit(spo2_Triage ~ 1 | temp + pressure + humidity, data = spo2_data)
+summary(spo2.model)
+
+
+# ================== Will be used in the article - 4h ================================
+
+man_avg4h.model <- mlogit(manual_Triage ~ 1 | temp_avg4h + pressure_avg4h + humidity_avg4h, data = man_data)
+summary(man_avg4h.model)
+
+quest_avg4h.model <- mlogit(question_Triage ~ 1 | temp_avg4h + pressure_avg4h + humidity_avg4h, data = question_data)
+summary(quest_avg4h.model)
+
+pulse_avg4h.model <- mlogit(pulse_Triage ~ 1 | temp_avg4h + pressure_avg4h + humidity_avg4h, data = pulse_data)
+summary(pulse_avg4h.model)
+
+spo2_avg4h.model <- mlogit(spo2_Triage ~ 1 | temp_avg4h + pressure_avg4h + humidity_avg4h, data = spo2_data)
+summary(spo2_avg4h.model)
+
+
+# ================== Will be used in the article - 8h ================================
+
+man_avg8h.model <- mlogit(manual_Triage ~ 1 | temp_avg8h + pressure_avg8h + humidity_avg8h, data = man_data)
+summary(man_avg8h.model)
+
+quest_avg8h.model <- mlogit(question_Triage ~ 1 | temp_avg8h + pressure_avg8h + humidity_avg8h, data = question_data)
+summary(quest_avg8h.model)
+
+pulse_avg8h.model <- mlogit(pulse_Triage ~ 1 | temp_avg8h + pressure_avg8h + humidity_avg8h, data = pulse_data)
+summary(pulse_avg8h.model)
+
+spo2_avg8h.model <- mlogit(spo2_Triage ~ 1 | temp_avg8h + pressure_avg8h + humidity_avg8h, data = spo2_data)
+summary(spo2_avg8h.model)
+
+
+# ================== Will be used in the article - 12h ================================
+
+man_avg12h.model <- mlogit(manual_Triage ~ 1 | temp_avg12h + pressure_avg12h + humidity_avg12h, data = man_data)
+summary(man_avg12h.model)
+
+quest_avg12h.model <- mlogit(question_Triage ~ 1 | temp_avg12h + pressure_avg12h + humidity_avg12h, data = question_data)
+summary(quest_avg12h.model)
+
+pulse_avg12h.model <- mlogit(pulse_Triage ~ 1 | temp_avg12h + pressure_avg12h + humidity_avg12h, data = pulse_data)
+summary(pulse_avg12h.model)
+
+spo2_avg12h.model <- mlogit(spo2_Triage ~ 1 | temp_avg12h + pressure_avg12h + humidity_avg12h, data = spo2_data)
+summary(spo2_avg12h.model)
+
+
+
+# ================== LOGISTIC REGRESSION - Multinomial =======================
+# ================== Will be used in the article - 0h ================================
+man.weather <- multinom(manual_Triage ~ temp + pressure + humidity, data = all_data, na.action=na.exclude)
+summary(man.weather)
+
+quest.weather <- multinom(question_Triage ~ temp + pressure + humidity, data = all_data, na.action=na.exclude)
+summary(quest.weather)
+
+pulse.weather <- multinom(pulse_Triage ~ temp + pressure + humidity, data = all_data, na.action=na.exclude)
+summary(pulse.weather)
+
+spo2.weather <- multinom(spo2_Triage ~ temp + pressure + humidity, data = all_data, na.action=na.exclude)
+summary(spo2.weather)
+
+
+
+
+
+# ================== Will be used in the article - 4h ================================
+man_avg4h.weather <- multinom(manual_Triage ~ temp_avg4h + pressure_avg4h + humidity_avg4h,
+                        data = all_data, na.action=na.exclude)
+summary(man_avg4h.weather)
+
+quest_avg4h.weather <- multinom(question_Triage ~ temp_avg4h + pressure_avg4h + humidity_avg4h,
+                          data = all_data, na.action=na.exclude)
+summary(quest_avg4h.weather)
+
+pulse_avg4h.weather <- multinom(pulse_Triage ~ temp_avg4h + pressure_avg4h + humidity_avg4h,
+                          data = all_data, na.action=na.exclude)
+summary(pulse_avg4h.weather)
+
+spo2_avg4h.weather <- multinom(spo2_Triage ~ temp_avg4h + pressure_avg4h + humidity_avg4h,
+                         data = all_data, na.action=na.exclude)
+summary(spo2_avg4h.weather)
+
+
+
+# ================== Will be used in the article - 8h ================================
+man_avg8h.weather <- multinom(manual_Triage ~ temp_avg8h + pressure_avg8h + humidity_avg8h,
+                        data = all_data, na.action=na.exclude)
+summary(man_avg8h.weather)
+
+quest_avg8h.weather <- multinom(question_Triage ~ temp_avg8h + pressure_avg8h + humidity_avg8h,
+                          data = all_data, na.action=na.exclude)
+summary(quest_avg8h.weather)
+
+pulse_avg8h.weather <- multinom(pulse_Triage ~ temp_avg8h + pressure_avg8h + humidity_avg8h,
+                          data = all_data, na.action=na.exclude)
+summary(pulse_avg8h.weather)
+
+spo2_avg8h.weather <- multinom(spo2_Triage ~ temp_avg8h + pressure_avg8h + humidity_avg8h,
+                         data = all_data, na.action=na.exclude)
+summary(spo2_avg8h.weather)
+
+
+
+# ================== Will be used in the article - 12h ================================
+man_avg12h.weather <- multinom(manual_Triage ~ temp_avg12h + pressure_avg12h + humidity_avg12h,
+                         data = all_data, na.action=na.exclude)
+summary(man_avg12h.weather)
+
+quest_avg12h.weather <- multinom(question_Triage ~ temp_avg12h + pressure_avg12h + humidity_avg12h,
+                           data = all_data, na.action=na.exclude)
+summary(quest_avg12h.weather)
+
+pulse_avg12h.weather <- multinom(pulse_Triage ~ temp_avg12h + pressure_avg12h + humidity_avg12h,
+                           data = all_data, na.action=na.exclude)
+summary(pulse_avg12h.weather)
+
+spo2_avg12h.weather <- multinom(spo2_Triage ~ temp_avg12h + pressure_avg12h + humidity_avg12h,
+                          data = all_data, na.action=na.exclude)
+summary(spo2_avg12h.weather)
+
+
+
+
+
+
+
+# ================== LOGISTIC REGRESSION - manual =====================
+# ================== Will be used in the article - 0h ================================
+man.weather.1 <- glm(manual_Triage_1 ~ temp + pressure + humidity, data = all_data, na.action=na.exclude,
+                   family = "binomial")
+summary(man.weather.1)
+
+man.weather.3 <- glm(manual_Triage_3 ~ temp + pressure + humidity, data = all_data, na.action=na.exclude,
+                     family = "binomial")
+summary(man.weather.3)
+
+man.weather.5 <- glm(manual_Triage_5 ~ temp + pressure + humidity, data = all_data, na.action=na.exclude,
+                     family = "binomial")
+summary(man.weather.5)
+
+
+quest.weather.1 <- glm(question_Triage_1 ~ temp + pressure + humidity, data = all_data, na.action=na.exclude,
+                     family = "binomial")
+summary(quest.weather.1)
+
+quest.weather.3 <- glm(question_Triage_3 ~ temp + pressure + humidity, data = all_data, na.action=na.exclude,
+                     family = "binomial")
+summary(quest.weather.3)
+
+quest.weather.5 <- glm(question_Triage_5 ~ temp + pressure + humidity, data = all_data, na.action=na.exclude,
+                     family = "binomial")
+summary(quest.weather.5)
+
+
+
+pulse.weather.1 <- glm(pulse_Triage_1 ~ temp + pressure + humidity, data = all_data, na.action=na.exclude,
+                     family = "binomial")
+summary(pulse.weather.1)
+
+pulse.weather.3 <- glm(pulse_Triage_3 ~ temp + pressure + humidity, data = all_data, na.action=na.exclude,
+                       family = "binomial")
+summary(pulse.weather.3)
+
+pulse.weather.5 <- glm(pulse_Triage_5 ~ temp + pressure + humidity, data = all_data, na.action=na.exclude,
+                       family = "binomial")
+summary(pulse.weather.5)
+
+
+
+spo2.weather.1 <- glm(spo2_Triage_1 ~ temp + pressure + humidity, data = all_data, na.action=na.exclude,
+                    family = "binomial")
+summary(spo2.weather.1)
+
+spo2.weather.3 <- glm(spo2_Triage_3 ~ temp + pressure + humidity, data = all_data, na.action=na.exclude,
+                    family = "binomial")
+summary(spo2.weather.3)
+
+spo2.weather.5 <- glm(spo2_Triage_5 ~ temp + pressure + humidity, data = all_data, na.action=na.exclude,
+                    family = "binomial")
+summary(spo2.weather.5)
+
+
+
+# ================== Will be used in the article - 4h ================================
+man.weather_avg4h.1 <- glm(manual_Triage_1 ~ temp_avg4h + pressure_avg4h + humidity_avg4h, data = all_data, na.action=na.exclude,
+                     family = "binomial")
+summary(man.weather_avg4h.1)
+
+man.weather_avg4h.3 <- glm(manual_Triage_3 ~ temp_avg4h + pressure_avg4h + humidity_avg4h, data = all_data, na.action=na.exclude,
+                     family = "binomial")
+summary(man.weather_avg4h.3)
+
+man.weather_avg4h.5 <- glm(manual_Triage_5 ~ temp_avg4h + pressure_avg4h + humidity_avg4h, data = all_data, na.action=na.exclude,
+                     family = "binomial")
+summary(man.weather_avg4h.5)
+
+
+quest.weather_avg4h.1 <- glm(question_Triage_1 ~ temp_avg4h + pressure_avg4h + humidity_avg4h, data = all_data, na.action=na.exclude,
+                       family = "binomial")
+summary(quest.weather_avg4h.1)
+
+quest.weather_avg4h.3 <- glm(question_Triage_3 ~ temp_avg4h + pressure_avg4h + humidity_avg4h, data = all_data, na.action=na.exclude,
+                       family = "binomial")
+summary(quest.weather_avg4h.3)
+
+quest.weather_avg4h.5 <- glm(question_Triage_5 ~ temp_avg4h + pressure_avg4h + humidity_avg4h, data = all_data, na.action=na.exclude,
+                       family = "binomial")
+summary(quest.weather_avg4h.5)
+
+
+
+pulse.weather_avg4h.1 <- glm(pulse_Triage_1 ~ temp_avg4h + pressure_avg4h + humidity_avg4h, data = all_data, na.action=na.exclude,
+                       family = "binomial")
+summary(pulse.weather_avg4h.1)
+
+pulse.weather_avg4h.3 <- glm(pulse_Triage_3 ~ temp_avg4h + pressure_avg4h + humidity_avg4h, data = all_data, na.action=na.exclude,
+                       family = "binomial")
+summary(pulse.weather_avg4h.3)
+
+pulse.weather_avg4h.5 <- glm(pulse_Triage_5 ~ temp_avg4h + pressure_avg4h + humidity_avg4h, data = all_data, na.action=na.exclude,
+                       family = "binomial")
+summary(pulse.weather_avg4h.5)
+
+
+
+spo2.weather_avg4h.1 <- glm(spo2_Triage_1 ~ temp_avg4h + pressure_avg4h + humidity_avg4h, data = all_data, na.action=na.exclude,
+                      family = "binomial")
+summary(spo2.weather_avg4h.1)
+
+spo2.weather_avg4h.3 <- glm(spo2_Triage_3 ~ temp_avg4h + pressure_avg4h + humidity_avg4h, data = all_data, na.action=na.exclude,
+                      family = "binomial")
+summary(spo2.weather_avg4h.3)
+
+spo2.weather_avg4h.5 <- glm(spo2_Triage_5 ~ temp_avg4h + pressure_avg4h + humidity_avg4h, data = all_data, na.action=na.exclude,
+                      family = "binomial")
+summary(spo2.weather_avg4h.5)
+
+
+
+# ================== Will be used in the article - 8h ================================
+man.weather_avg8h.1 <- glm(manual_Triage_1 ~ temp_avg8h + pressure_avg8h + humidity_avg8h, data = all_data, na.action=na.exclude,
+                           family = "binomial")
+summary(man.weather_avg8h.1)
+
+man.weather_avg8h.3 <- glm(manual_Triage_3 ~ temp_avg8h + pressure_avg8h + humidity_avg8h, data = all_data, na.action=na.exclude,
+                           family = "binomial")
+summary(man.weather_avg8h.3)
+
+man.weather_avg8h.5 <- glm(manual_Triage_5 ~ temp_avg8h + pressure_avg8h + humidity_avg8h, data = all_data, na.action=na.exclude,
+                           family = "binomial")
+summary(man.weather_avg8h.5)
+
+
+quest.weather_avg8h.1 <- glm(question_Triage_1 ~ temp_avg8h + pressure_avg8h + humidity_avg8h, data = all_data, na.action=na.exclude,
+                             family = "binomial")
+summary(quest.weather_avg8h.1)
+
+quest.weather_avg8h.3 <- glm(question_Triage_3 ~ temp_avg8h + pressure_avg8h + humidity_avg8h, data = all_data, na.action=na.exclude,
+                             family = "binomial")
+summary(quest.weather_avg8h.3)
+
+quest.weather_avg8h.5 <- glm(question_Triage_5 ~ temp_avg8h + pressure_avg8h + humidity_avg8h, data = all_data, na.action=na.exclude,
+                             family = "binomial")
+summary(quest.weather_avg8h.5)
+
+
+
+pulse.weather_avg8h.1 <- glm(pulse_Triage_1 ~ temp_avg8h + pressure_avg8h + humidity_avg8h, data = all_data, na.action=na.exclude,
+                             family = "binomial")
+summary(pulse.weather_avg8h.1)
+
+pulse.weather_avg8h.3 <- glm(pulse_Triage_3 ~ temp_avg8h + pressure_avg8h + humidity_avg8h, data = all_data, na.action=na.exclude,
+                             family = "binomial")
+summary(pulse.weather_avg8h.3)
+
+pulse.weather_avg8h.5 <- glm(pulse_Triage_5 ~ temp_avg8h + pressure_avg8h + humidity_avg8h, data = all_data, na.action=na.exclude,
+                             family = "binomial")
+summary(pulse.weather_avg8h.5)
+
+
+
+spo2.weather_avg8h.1 <- glm(spo2_Triage_1 ~ temp_avg8h + pressure_avg8h + humidity_avg8h, data = all_data, na.action=na.exclude,
+                            family = "binomial")
+summary(spo2.weather_avg8h.1)
+
+spo2.weather_avg8h.3 <- glm(spo2_Triage_3 ~ temp_avg8h + pressure_avg8h + humidity_avg8h, data = all_data, na.action=na.exclude,
+                            family = "binomial")
+summary(spo2.weather_avg8h.3)
+
+spo2.weather_avg8h.5 <- glm(spo2_Triage_5 ~ temp_avg8h + pressure_avg8h + humidity_avg8h, data = all_data, na.action=na.exclude,
+                            family = "binomial")
+summary(spo2.weather_avg8h.5)
+
+
+
+
+# ================== Will be used in the article - 12h ================================
+man.weather_avg12h.1 <- glm(manual_Triage_1 ~ temp_avg12h + pressure_avg12h + humidity_avg12h, data = all_data, na.action=na.exclude,
+                           family = "binomial")
+summary(man.weather_avg12h.1)
+
+man.weather_avg12h.3 <- glm(manual_Triage_3 ~ temp_avg12h + pressure_avg12h + humidity_avg12h, data = all_data, na.action=na.exclude,
+                           family = "binomial")
+summary(man.weather_avg12h.3)
+
+man.weather_avg12h.5 <- glm(manual_Triage_5 ~ temp_avg12h + pressure_avg12h + humidity_avg12h, data = all_data, na.action=na.exclude,
+                           family = "binomial")
+summary(man.weather_avg12h.5)
+
+
+quest.weather_avg12h.1 <- glm(question_Triage_1 ~ temp_avg12h + pressure_avg12h + humidity_avg12h, data = all_data, na.action=na.exclude,
+                             family = "binomial")
+summary(quest.weather_avg12h.1)
+
+quest.weather_avg12h.3 <- glm(question_Triage_3 ~ temp_avg12h + pressure_avg12h + humidity_avg12h, data = all_data, na.action=na.exclude,
+                             family = "binomial")
+summary(quest.weather_avg12h.3)
+
+quest.weather_avg12h.5 <- glm(question_Triage_5 ~ temp_avg12h + pressure_avg12h + humidity_avg12h, data = all_data, na.action=na.exclude,
+                             family = "binomial")
+summary(quest.weather_avg12h.5)
+
+
+
+pulse.weather_avg12h.1 <- glm(pulse_Triage_1 ~ temp_avg12h + pressure_avg12h + humidity_avg12h, data = all_data, na.action=na.exclude,
+                             family = "binomial")
+summary(pulse.weather_avg12h.1)
+
+pulse.weather_avg12h.3 <- glm(pulse_Triage_3 ~ temp_avg12h + pressure_avg12h + humidity_avg12h, data = all_data, na.action=na.exclude,
+                             family = "binomial")
+summary(pulse.weather_avg12h.3)
+
+pulse.weather_avg12h.5 <- glm(pulse_Triage_5 ~ temp_avg12h + pressure_avg12h + humidity_avg12h, data = all_data, na.action=na.exclude,
+                             family = "binomial")
+summary(pulse.weather_avg12h.5)
+
+
+
+spo2.weather_avg12h.1 <- glm(spo2_Triage_1 ~ temp_avg12h + pressure_avg12h + humidity_avg12h, data = all_data, na.action=na.exclude,
+                            family = "binomial")
+summary(spo2.weather_avg12h.1)
+
+spo2.weather_avg12h.3 <- glm(spo2_Triage_3 ~ temp_avg12h + pressure_avg12h + humidity_avg12h, data = all_data, na.action=na.exclude,
+                            family = "binomial")
+summary(spo2.weather_avg12h.3)
+
+spo2.weather_avg12h.5 <- glm(spo2_Triage_5 ~ temp_avg12h + pressure_avg12h + humidity_avg12h, data = all_data, na.action=na.exclude,
+                            family = "binomial")
+summary(spo2.weather_avg12h.5)
+
+
+
+
+
+
+
+# ================== LINEAR REGRESSION =======================
 # ================== Will be used in the article - 0h ================================
 man.weather <- lm(manual_Triage ~ temp + pressure + humidity, data = all_data, na.action=na.exclude)
 summary(man.weather)

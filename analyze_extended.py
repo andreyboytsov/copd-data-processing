@@ -11,8 +11,8 @@ test_id_selection_random_seed = 0
 fraction_train_ids = 0.9
 # max_days = 7
 # min_days = 3
-max_days = 8
-min_days = 31
+max_days = 21
+min_days = 16
 # ============================== END PARAMETERS  ==========================
 
 interesting_columns_weather = ['temp', 'pressure','humidity']  # TODO wind_speed ?
@@ -25,6 +25,7 @@ np.random.seed(test_id_selection_random_seed)
 selected_ids = np.random.choice(all_ids, size = int(len(all_ids)*fraction_train_ids))
 
 data = all_data[[i in selected_ids for i in all_data['Merida ID']]]
+#data = all_data
 
 all_models = {
     "1Dummy:Majority": dummy.DummyClassifier(strategy='most_frequent'),
@@ -234,7 +235,7 @@ if __name__=="__main__":
         results_df = pd.concat([results_df] + history_dfs, axis=0, sort=False)
 
     # ================== STEP 2. Weather & history
-    for weather_avg in [0,4,8,12]:
+    for weather_avg in [16,20,24,28,32,36,40,44,48]:
         if weather_avg>0:
             interesting_columns = [i+'_avg'+str(weather_avg)+'h' for i in interesting_columns_weather]
             weather_hours_avg = weather_avg
@@ -258,6 +259,6 @@ if __name__=="__main__":
 
         results_df = pd.concat([results_df] + history_dfs, axis=0, sort=False)
 
-        results_df.to_csv("./data_generated/final_results_4.csv")
+        results_df.to_csv("./data_generated/final_results_8_and_half.csv")
 
     # TODO Collapse grid search

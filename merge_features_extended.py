@@ -5,7 +5,7 @@ import pytz
 import datetime
 
 fname = "./data_generated/Patients_and_Weather_extended.csv"
-average_considered_hours = [4,8,12,24]
+average_considered_hours = [4,8,12,16,20,24,28,32,36,40,44,48]
 weather_columns = ['temp','humidity','pressure','wind_speed']
 
 # Read the csv files
@@ -85,7 +85,7 @@ for index, row in patients_and_weather_df.iterrows():
             ((row['Assess_date_No_Time'] - patients_and_weather_df['Assess_date_No_Time']) > datetime.timedelta(days=d-1))]
         #print("\t", len(subselection))
         for par in interesting_parameters:
-            patients_and_weather_df.loc[index, par+"_"+str(d)] = np.nanmean(subselection[par].as_float())
+            patients_and_weather_df.loc[index, par+"_"+str(d)] = np.nanmean(subselection[par])
 
 ### delete all rows in the dataframe and keep only the header so we can append later
 #patients_and_weather_final = patients_and_weather_df.iloc[0:0]
